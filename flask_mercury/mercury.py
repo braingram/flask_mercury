@@ -44,6 +44,29 @@ def make_blueprint(app=None, register=True, store=None):
                 print "failed to save page data: %s" % E
             return flask.jsonify(data)
 
+    # ---- snippets ----
+    @mercury.route('/views/panels/snippets.html')
+    def list_snippets():
+        # list snippets
+        snippets = os.listdir(os.path.join(template_folder, 'snippets'))
+        print snippets
+        return flask.jsonify(dict(snippets=snippets))
+
+    @mercury.route('/snippets/<name>/options.html')
+    def get_snippet_options(name, methods=['POST']):
+        # these snippet options should be forms!
+        fn = 'snippets/%s/options.html'
+        return flask.render_template(fn)
+
+    @mercury.route('/snippets/<name>/preview.html')
+    def get_snippet_preview(name, methods=['POST']):
+        fn = 'snippets/%s/preview.html'
+        # TODO get options
+        for k in dir(flask):
+            print k, getattr(flask, k)
+        data = dict(options_test="nothing for now")
+        return flask.render_template(fn, data=data)
+
     # dirty fix for flask static bug
     @mercury.route('/files/<path:path>')
     def files(path):
