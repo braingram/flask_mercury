@@ -3,16 +3,14 @@
 <head>
 	<meta charset="utf-8">
     <title>Mercury test</title>
-    <!--
-    <link href="{{ url_for('mercury.static', filename='css/jqueryFileTree.css') }}" rel="stylesheet"></link>
-    -->
     <script type="text/javascript" src="{{ url_for('mercury.static', filename='js/mercury_loader.js') }}"></script>
 </head>
 <body class="home">
     <div id="header">
     </div>
-    <div data-mercury="full" data-type="editable" class="mercury-region,content">
+    <div id="content" data-mercury="full" data-type="editable" class="mercury-region">
         <a href="javascript:Mercury.trigger('toggle:interface')">Edit</a>
+        <p></p>
     </div>
 </body>
 </html>

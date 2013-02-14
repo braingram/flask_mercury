@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import json
 import logging
 import os
 
@@ -29,12 +30,24 @@ def make_blueprint(app=None, register=True, fnfilter=None, dfilter=None):
     def test():
         print flask.request.method
         if flask.request.method == 'GET':
+            if flask.request.args.get('mercury_frame', False):
+                try:
+                    with open('page.json', 'r') as f:
+                        page = json.load(f)
+                    raise flask.abort(404)
+                    return flask.jsonify(dict(response=page))
+                except Exception as E:
+                    print "failed to load page data: %s" % E
             return flask.render_template('test.html')
         else:
-            print "post called with", flask.request.data
-            #for k in dir(flask.request):
-            #    print k, getattr(flask.request, k)
-            return flask.jsonify(flask.request.args)
+            page = flask.request.data
+            print "put called with", page
+            try:
+                with open('page.json', 'w') as f:
+                    json.dump(page, f)
+            except Exception as E:
+                print "failed to save page data: %s" % E
+            return flask.jsonify(dict(response=flask.request.data))
 
     # dirty fix for flask static bug
     @mercury.route('/files/<path:path>')
