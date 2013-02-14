@@ -6,12 +6,12 @@ import os
 
 import flask
 
+import storage
 
-def make_blueprint(app=None, register=True, fnfilter=None, dfilter=None):
-    if fnfilter is None:
-        fnfilter = lambda fn: True
-    if dfilter is None:
-        dfilter = lambda d: True
+
+def make_blueprint(app=None, register=True, store=None):
+    if store is None:
+        store = storage.Store()
     main_dir = os.path.dirname(os.path.abspath(__file__))
     template_folder = os.path.join(main_dir, 'templates')
     static_folder = os.path.join(main_dir, 'static')
@@ -26,33 +26,23 @@ def make_blueprint(app=None, register=True, fnfilter=None, dfilter=None):
         print flask.request
         return flask.jsonify(flask.request)
 
-    @mercury.route('/test', methods=['GET', 'PUT'])
-    def test():
-        print flask.request.method
+    @mercury.route('/<key>', methods=['GET', 'PUT'])
+    def test(key):
         if flask.request.method == 'GET':
             content = {}
             if flask.request.args.get('mercury_frame', False):
                 try:
-                    with open('page.json', 'r') as f:
-                        page = json.load(f)
-                    content = page['content']
-                    #raise flask.abort(404)
-                    #page['_method'] = 'GET'
-                    #return flask.jsonify(page)
+                    content = store.load(key)
                 except Exception as E:
                     print "failed to load page data: %s" % E
-            return flask.render_template('test.html', content=content)
+            return flask.render_template('%s.html' % key, content=content)
         else:
-            page = json.loads(flask.request.data)
-            #if '_method' in page:
-            #    del page['_method']
-            print "put called with", page
+            data = json.loads(flask.request.data)
             try:
-                with open('page.json', 'w') as f:
-                    json.dump(page, f)
+                store.save(key, data['content'])
             except Exception as E:
                 print "failed to save page data: %s" % E
-            return flask.jsonify(page)
+            return flask.jsonify(data)
 
     # dirty fix for flask static bug
     @mercury.route('/files/<path:path>')
@@ -68,7 +58,8 @@ def make_blueprint(app=None, register=True, fnfilter=None, dfilter=None):
 
 
 def test(**kwargs):
-    ft, app = make_blueprint(register=True)
+    store = kwargs.pop('store', None)
+    ft, app = make_blueprint(register=True, store=store)
     logging.debug(app.url_map)
     app.run(**kwargs)
 
