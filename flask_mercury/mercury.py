@@ -30,16 +30,18 @@ def make_blueprint(app=None, register=True, fnfilter=None, dfilter=None):
     def test():
         print flask.request.method
         if flask.request.method == 'GET':
+            content = {}
             if flask.request.args.get('mercury_frame', False):
                 try:
                     with open('page.json', 'r') as f:
                         page = json.load(f)
+                    content = page['content']
                     #raise flask.abort(404)
                     #page['_method'] = 'GET'
-                    return flask.jsonify(page)
+                    #return flask.jsonify(page)
                 except Exception as E:
                     print "failed to load page data: %s" % E
-            return flask.render_template('test.html')
+            return flask.render_template('test.html', content=content)
         else:
             page = json.loads(flask.request.data)
             #if '_method' in page:

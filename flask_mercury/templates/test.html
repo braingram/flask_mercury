@@ -9,9 +9,13 @@
 <body class="home">
     <div id="header">
     </div>
+    <a href="javascript:Mercury.trigger('toggle:interface')">Edit</a>
     <div id="test_edit" data-mercury="full" class="mercury-region">
-        <a href="javascript:Mercury.trigger('toggle:interface')">Edit</a>
-        <p></p>
+        {% if (content != {}) and ('test_edit' in content) and ('value' in content['test_edit']) %}
+            {{ content['test_edit']['value']|safe }}
+        {% else %}
+            <p></p>
+        {% endif %}
     </div>
     <script>
         $(parent).trigger('initialize:frame');
