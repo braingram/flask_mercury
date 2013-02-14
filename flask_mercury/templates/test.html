@@ -9,7 +9,9 @@
     <script type="text/javascript" src="{{ url_for('mercury.static', filename='js/mercury_loader.js') }}"></script>
 </head>
 <body class="home">
-    <div data-mercury="full">
+    <div id="header">
+    </div>
+    <div data-mercury="full" data-type="editable" class="mercury-region,content">
         <a href="javascript:Mercury.trigger('toggle:interface')">Edit</a>
     </div>
 </body>

@@ -20,14 +20,21 @@ def make_blueprint(app=None, register=True, fnfilter=None, dfilter=None):
     mercury = flask.Blueprint('mercury', 'mercury', \
             template_folder=template_folder, static_folder=static_folder)
 
-    @mercury.route('/save_content')
+    @mercury.route('/save_content', methods=['POST'])
     def save_content():
         print flask.request
         return flask.jsonify(flask.request)
 
-    @mercury.route('/test')
+    @mercury.route('/test', methods=['GET', 'PUT'])
     def test():
-        return flask.render_template('test.html')
+        print flask.request.method
+        if flask.request.method == 'GET':
+            return flask.render_template('test.html')
+        else:
+            print "post called with", flask.request.data
+            #for k in dir(flask.request):
+            #    print k, getattr(flask.request, k)
+            return flask.jsonify(flask.request.args)
 
     # dirty fix for flask static bug
     @mercury.route('/files/<path:path>')
