@@ -34,20 +34,23 @@ def make_blueprint(app=None, register=True, fnfilter=None, dfilter=None):
                 try:
                     with open('page.json', 'r') as f:
                         page = json.load(f)
-                    raise flask.abort(404)
-                    return flask.jsonify(dict(response=page))
+                    #raise flask.abort(404)
+                    #page['_method'] = 'GET'
+                    return flask.jsonify(page)
                 except Exception as E:
                     print "failed to load page data: %s" % E
             return flask.render_template('test.html')
         else:
-            page = flask.request.data
+            page = json.loads(flask.request.data)
+            #if '_method' in page:
+            #    del page['_method']
             print "put called with", page
             try:
                 with open('page.json', 'w') as f:
                     json.dump(page, f)
             except Exception as E:
                 print "failed to save page data: %s" % E
-            return flask.jsonify(dict(response=flask.request.data))
+            return flask.jsonify(page)
 
     # dirty fix for flask static bug
     @mercury.route('/files/<path:path>')

@@ -4,13 +4,17 @@
 	<meta charset="utf-8">
     <title>Mercury test</title>
     <script type="text/javascript" src="{{ url_for('mercury.static', filename='js/mercury_loader.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('mercury.static', filename='js/jquery-1.7.js') }}"></script>
 </head>
 <body class="home">
     <div id="header">
     </div>
-    <div id="content" data-mercury="full" data-type="editable" class="mercury-region">
+    <div id="test_edit" data-mercury="full" class="mercury-region">
         <a href="javascript:Mercury.trigger('toggle:interface')">Edit</a>
         <p></p>
     </div>
+    <script>
+        $(parent).trigger('initialize:frame');
+    </script>
 </body>
 </html>
