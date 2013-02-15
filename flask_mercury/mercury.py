@@ -47,24 +47,35 @@ def make_blueprint(app=None, register=True, store=None):
     # ---- snippets ----
     @mercury.route('/views/panels/snippets.html')
     def list_snippets():
-        # list snippets
-        snippets = os.listdir(os.path.join(template_folder, 'snippets'))
-        print snippets
-        return flask.jsonify(dict(snippets=snippets))
+        # load snippets
+        snippets = []
+        d = os.path.join(template_folder, 'snippets')
+        for fn in os.listdir(d):
+            path = os.path.join(d, fn)
+            if os.path.isdir(path):
+                snippet = dict(name=fn, tags='', description=fn)
+                # load snippet info from
+                info_fn = os.path.join(path, 'info.json')
+                if os.path.exists(info_fn):
+                    with open(info_fn, 'r') as f:
+                        info = json.load(f)
+                    snippet.update(info)
+                snippets.append(snippet)
+        return flask.render_template('snippets.html', snippets=snippets)
 
-    @mercury.route('/snippets/<name>/options.html')
-    def get_snippet_options(name, methods=['POST']):
+    @mercury.route('/snippets/<name>/options.html', methods=['POST'])
+    def get_snippet_options(name):
         # these snippet options should be forms!
-        fn = 'snippets/%s/options.html'
+        fn = 'snippets/%s/options.html' % name
         return flask.render_template(fn)
 
-    @mercury.route('/snippets/<name>/preview.html')
-    def get_snippet_preview(name, methods=['POST']):
-        fn = 'snippets/%s/preview.html'
-        # TODO get options
-        for k in dir(flask):
-            print k, getattr(flask, k)
-        data = dict(options_test="nothing for now")
+    @mercury.route('/snippets/<name>/preview.html', methods=['POST'])
+    def get_snippet_preview(name):
+        fn = 'snippets/%s/preview.html' % name
+        data = {}
+        # get options
+        for k, v in flask.request.form.items():
+            data[k] = v
         return flask.render_template(fn, data=data)
 
     # dirty fix for flask static bug
