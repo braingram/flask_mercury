@@ -32,7 +32,22 @@ def make_blueprint(app=None, register=True, store=None):
                 except Exception as E:
                     print "failed to load page data: %s" % E
             # TODO render saved snippets
-            return flask.render_template('%s.html' % key, content=content)
+            #content[<region>]['snippets'][snippet_<i:0-based>] = options
+            # look for [snippet_<i>/1] in content[<region>]['value']
+            page = flask.render_template('%s.html' % key, content=content)
+            for rk in content:
+                for si in content[rk]['snippets']:
+                    skey = '[%s/1]' % si
+                    #print
+                    #print "key:", skey
+                    snippet = content[rk]['snippets'][si]
+                    stext = flask.render_template('/snippets/%s/preview.html' \
+                            % snippet['name'], data=snippet)
+                    #print "text:", stext
+                    page = page.replace(skey, stext)
+                    #print "page:", type(page), page
+            print "returning page:", page
+            return page
         else:
             data = json.loads(flask.request.data)
             try:
