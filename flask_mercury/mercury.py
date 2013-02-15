@@ -21,11 +21,7 @@ def make_blueprint(app=None, register=True, store=None):
     mercury = flask.Blueprint('mercury', 'mercury', \
             template_folder=template_folder, static_folder=static_folder)
 
-    @mercury.route('/save_content', methods=['POST'])
-    def save_content():
-        print flask.request
-        return flask.jsonify(flask.request)
-
+    # ----- example route ----
     @mercury.route('/<key>', methods=['GET', 'PUT'])
     def test(key):
         if flask.request.method == 'GET':
@@ -35,6 +31,7 @@ def make_blueprint(app=None, register=True, store=None):
                     content = store.load(key)
                 except Exception as E:
                     print "failed to load page data: %s" % E
+            # TODO render saved snippets
             return flask.render_template('%s.html' % key, content=content)
         else:
             data = json.loads(flask.request.data)
