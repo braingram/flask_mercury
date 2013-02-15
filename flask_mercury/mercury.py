@@ -26,15 +26,15 @@ def make_blueprint(app=None, register=True, store=None):
     def test(key):
         if flask.request.method == 'GET':
             content = {}
-            if flask.request.args.get('mercury_frame', False):
-                try:
-                    content = store.load(key)
-                except Exception as E:
-                    print "failed to load page data: %s" % E
-            # TODO render saved snippets
+            try:
+                content = store.load(key)
+            except Exception as E:
+                print "failed to load page data: %s" % E
             #content[<region>]['snippets'][snippet_<i:0-based>] = options
             # look for [snippet_<i>/1] in content[<region>]['value']
             page = flask.render_template('%s.html' % key, content=content)
+            return page
+            stext = ""
             for rk in content:
                 for si in content[rk]['snippets']:
                     skey = '[%s/1]' % si
@@ -46,7 +46,7 @@ def make_blueprint(app=None, register=True, store=None):
                     #print "text:", stext
                     page = page.replace(skey, stext)
                     #print "page:", type(page), page
-            print "returning page:", page
+            page = page.replace('</body>', stext + '</body>')
             return page
         else:
             data = json.loads(flask.request.data)
