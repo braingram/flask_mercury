@@ -50,7 +50,9 @@ def make_blueprint(app=None, register=True, store=None):
         for fn in os.listdir(d):
             path = os.path.join(d, fn)
             if os.path.isdir(path):
-                snippet = dict(name=fn, tags='', description=fn)
+                options = os.path.exists(os.path.join(path, 'options.html'))
+                snippet = dict(name=fn,
+                        tags='', description=fn, options=options)
                 # load snippet info from
                 info_fn = os.path.join(path, 'info.json')
                 if os.path.exists(info_fn):

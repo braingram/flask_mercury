@@ -1,0 +1,41 @@
+A flask backend for the mercury editor:
+
+http://jejacks0n.github.com/mercury/
+
+
+Demo
+----
+1) clone/download the repo
+2) cd to the directory and run: python test.py
+3) open a web browser to 127.0.0.1:5000/mercury/test
+
+Saving edited content will create a .json file in a data directory in the same
+directory as test.py
+
+When the page is reloaded, if a matching .json file is found (test.json for
+template 'test'), it will be loaded and used to render the page.
+
+
+Snippets
+----
+Snippets are saved in the 'snippets' subfolder of the template directory.
+Each snippet is a directory that contains:
+
+1) options.html (optional)
+2) preview.html
+3) info.json (optional)
+
+If options.html does not exist, no snippet options will be presented.
+info.json can contain the following:
+- description: string, describing the snippet
+- tags: string, comma-separated snippet tags
+- options: boolean, true=snippet has options
+    (will throw error if options.html does not exist)
+
+
+Saving/loading
+-----
+Saving/loading of content is handled by a 'Store'.
+For example see flask_mercury/storage/flatfile.py for a simple flatfile example.
+
+This should be flexible enough to use a mongo backend or something similar.
