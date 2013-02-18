@@ -46,14 +46,10 @@ def make_blueprint(app=None, register=True, store=None):
             for rk in content:
                 for si in content[rk]['snippets']:
                     skey = '[%s/1]' % si
-                    #print
-                    #print "key:", skey
                     snippet = content[rk]['snippets'][si]
                     stext = flask.render_template('/snippets/%s/preview.html' \
                             % snippet['name'], data=snippet)
-                    #print "text:", stext
                     page = page.replace(skey, stext)
-                    #print "page:", type(page), page
             #page = page.replace('</body>', stext + '</body>')
             return page
         else:
@@ -76,7 +72,6 @@ def make_blueprint(app=None, register=True, store=None):
                 options = os.path.exists(os.path.join(path, 'options.html'))
                 snippet = dict(name=fn,
                         tags='', description=fn, options=options)
-                print snippet
                 # load snippet info from
                 info_fn = os.path.join(path, 'info.json')
                 if os.path.exists(info_fn):
