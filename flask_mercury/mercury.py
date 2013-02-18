@@ -32,8 +32,16 @@ def make_blueprint(app=None, register=True, store=None):
                 print "failed to load page data: %s" % E
             #content[<region>]['snippets'][snippet_<i:0-based>] = options
             # look for [snippet_<i>/1] in content[<region>]['value']
+            # fix snippets?
+            #for k in content:
+            #    if 'snippets' in content[k]:
+            #        snippets = content[k]['snippets'].copy()
+            #        for s in snippets:
+            #            content[k]['snippets'][s] = dict(
+            #                    name=snippets[s]['name'],
+            #                    options=snippets[s])
             page = flask.render_template('%s.html' % key, content=content)
-            return page
+            #return page
             stext = ""
             for rk in content:
                 for si in content[rk]['snippets']:
@@ -46,7 +54,7 @@ def make_blueprint(app=None, register=True, store=None):
                     #print "text:", stext
                     page = page.replace(skey, stext)
                     #print "page:", type(page), page
-            page = page.replace('</body>', stext + '</body>')
+            #page = page.replace('</body>', stext + '</body>')
             return page
         else:
             data = json.loads(flask.request.data)
@@ -68,6 +76,7 @@ def make_blueprint(app=None, register=True, store=None):
                 options = os.path.exists(os.path.join(path, 'options.html'))
                 snippet = dict(name=fn,
                         tags='', description=fn, options=options)
+                print snippet
                 # load snippet info from
                 info_fn = os.path.join(path, 'info.json')
                 if os.path.exists(info_fn):

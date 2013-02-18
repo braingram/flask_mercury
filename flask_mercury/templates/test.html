@@ -5,6 +5,17 @@
     <title>Mercury test</title>
     <script type="text/javascript" src="{{ url_for('mercury.static', filename='js/mercury_loader.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('mercury.static', filename='js/jquery-1.7.js') }}"></script>
+    <script>
+        $(window).bind('mercury:ready', function () {
+            {% if (content != {}) and ('test_edit' in content) and ('snippets' in content['test_edit']) %}
+            var raw_snippets = {{ content['test_edit']['snippets']|tojson|safe }};
+            //console.log(raw_snippets);
+            snippets = Mercury.Snippet.load(raw_snippets);
+            {% else %}
+            console.log("No snippets provided");
+            {% endif %}
+            });
+    </script>
 </head>
 <body class="home">
     <a href="javascript:Mercury.trigger('toggle:interface')">Edit</a>
@@ -17,16 +28,6 @@
     </div>
     <script>
         $(parent).trigger('initialize:frame');
-        /*
-        $(window).bind('mercury:ready', function() {
-            console.log('loading snippets');
-            snippets = Mercury.Snippet.load({
-                snippet_2: {name: 'no_options', options: {}},
-                snippet_3: {name: 'no_options', options: {}},
-            });
-            console.log(snippets);
-        });
-        */
     </script>
 </body>
 </html>
