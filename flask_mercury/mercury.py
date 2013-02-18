@@ -9,11 +9,13 @@ import flask
 import storage
 
 
-def make_blueprint(app=None, register=True, store=None):
+def make_blueprint(app=None, register=True, store=None,
+        template_dir=None):
     if store is None:
         store = storage.Store()
     main_dir = os.path.dirname(os.path.abspath(__file__))
-    template_folder = os.path.join(main_dir, 'templates')
+    template_folder = os.path.join(main_dir, 'templates') if \
+            template_dir is None else template_dir
     static_folder = os.path.join(main_dir, 'static')
     logging.debug('mercury main_dir: %s' % main_dir)
     logging.debug('mercury template_folder: %s' % template_folder)

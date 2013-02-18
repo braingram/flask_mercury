@@ -4301,7 +4301,7 @@ Showdown.converter = function() {
         this.bindDocumentEvents();
         this.resize();
         this.initializeRegions();
-        //this.finalizeInterface();  BJG Edit see mercury issue: 342
+        //this.finalizeInterface();  //BJG Edit see mercury issue: 342
         Mercury.trigger('ready');
         if (iframeWindow.jQuery) {
           iframeWindow.jQuery(iframeWindow).trigger('mercury:ready');
